@@ -1,17 +1,8 @@
-********************************************************************************
-* Version:     1.0.0                                                           *
-* Title:       setenv                                                          *
-* Author:      Alessandro Pizzigolotto (gitlab: @dubidub)                      *
-*                                                                              *
-* Description: This is an utility .do file which sets the pathnames to work    *
-* at the HFCS dataset, with standard global variables to be used in your       *
-* programs. We define the main workspace directory where projects are stored,  *
-* the data directory where waves are stored and it defines the projects.       *
-* N. B. : Remember to run this standalone file before every main.do file and   *
-* every do file to define the working directories.                             *
-********************************************************************************
+* totally clean the environment before starting
+* to put it into the profile.do file, it is not possible to declare them
+* into a program (don't use delimiters please, ffs)
+capture program drop _all
 
-program drop _all
 discard
 
 clear
@@ -20,54 +11,105 @@ clear matrix
 set more off
 set matsize 11000, permanently
 
-* set the timer
-timer on 1
 
-* set utility folder
-global UTILITIES "P:/ECB business areas/DGR/Databases and Programme files/DGR/Alessandro Pizzigolotto/utilities"
+*! setenv v1.0.1 APizzigolotto 11sep2017
+program define setenv, sclass
+    version 1.0.1
+    * set env datapath workspace graphformat, wave(1 OR 2 OR both)
+    capture syntax, data(string) dir(string) [fmt(string)]
 
-* set global macro for HFCS DATA PATHNAMES: locally on the database
-global WORKSPACE "P:/ECB business areas/DGR/Databases and Programme files/DGR/Alessandro Pizzigolotto"
+    if _rc {
+        di as err "there's an error in the syntax or the pathnames"
+        exit 198
+    }
 
-* Jirka's Discussion Paper Project
-* global WORKSPACE "P:\ECB business areas\DGR\Databases and Programme files\MPR\D - Other projects\Slacalek - DP Distr Effects of MP"
+    * divide in proper local macros the string
+    * and clear s() macros
+    sreturn clear
+    sreturn local data        = "`1'"
+    sreturn local workspace   = "`2'"
+    sreturn local graphFormat = "`3'"
 
-* where the dataset data are collocated
-global HFCSDATA  "C:\Users\pizzigo\Documents\hfcs"
-* dataset names with path
-global WAVE1     "$HFCSDATA\HFCS_UDB_1_3_Stata"
-* global WAVE2     "$HFCSDATA\HFCS_User_DataBase_2_0_Stata"
-global WAVE2     "$HFCSDATA\HFCS_UDB_2_1_STATA"
+    * standard project scheme in the documentation
+    local subdir    = "data programs references text"
+    local subsubdir = "graphs tables"
 
-cd "$WORKSPACE"
+    * assumption: datasets subfolders are named after the wave as wave1 or wave2
+    * no matter the database version, then we save the value pathname of the
+    * folder of the two waves (if there is the distinction between the two waves,
+    * otherwise I set only the datapath)
+    capture confirm file "`data'"
+    if _rc {
+        di "error: there's no data folder at the indicated path. end."
+        exit
+    }
 
-* set the current project ENV MACROS
-do "$UTILITIES/setenv/setProject.do"
+    cd "`data'"
+    di "... datasets are situated in `data' (pathname saved in data)"
+    forvalues i = 1/2 {
+        capture confirm file "`data'/wave`i'"
+        if !_rc {
+            sreturn local wave`i' = "`data'/wave`i'"
+            di "... wave `i' is situated in `data'/wave`i' (pathname saved in wave`i')."
+        }
+    }
 
-* load the encodestrings program to convert sa0100 (just in case)
-* set the current project ENV MACROS
-do "$UTILITIES/datahand/encodestrings.do"
+    * build the workspace (if does not exist)
+    capture confirm file "`workspace'"
+    if _rc {
+        mkdir "`workspace'"
+        scalar flag = 1
+        * to generate a line break, it is a good practice to use carriage return
+        * char(13) and line feed char(10) together
+        di "... workspace folder does not exist at the indicated path... new folder created." + char(13) + char(10)
+    }
 
-* verify if the xml tool for the tables is already installed (if needed)
-* ssc install xml_tab
+    cd "`workspace'"
+    foreach d in `subdir' {
 
-* verify if outreg2 is already installed (if needed)
-* ssc install outreg2
+        capture confirm file "`workspace'/`d'/nul"
 
-* set a sans-serif fontface as Arial
-graph set window fontface "Arial"
+        if _rc {
 
-* set default scheme for the graphs as the report
-set scheme ecb2015
+            mkdir "`workspace'/`d'/"
+            di "... subfolder `d' added to the workspace."
 
-* set a global variable for pre0-determined graph format
-global graphFormat "pdf"
+            if "`d'" == "data" {
+                foreach dd in `subsubdir' {
+                    mkdir "`workspace'/`d'/`dd'"
+                    di "... subfolder `d'/`dd' added to the workspace."
+                }
+            }
 
-* if we need to build a complete derived dataset
-* only for strange reasons, use the supplementary files D_compl.dta datasets.
-* do "$UTILITIES/setenv/createCompl.do"
-* if we need to append the two waves from the different folders
-* do "$UTILITIES/datahand/appendWaves.do"
+        }
 
-timer off 1
-timer list 1
+        sreturn local `d' = "`workspace'/`d'/"
+
+        foreach dd in `subsubdir' {
+            capture confirm file "`workspace'/`d'/`dd'/nul"
+
+            if _rc {
+                mkdir "`workspace'/`d'/`dd'"
+                di "... subfolder `d'/`dd' added to the workspace."
+            }
+
+            sreturn local `dd' = "`workspace'/`d'/`dd'"
+
+        }
+
+    }
+
+    * some graph settings:
+    * set a sans-serif fontface as Arial
+    graph set window fontface "Arial"
+    * set default scheme for the graphs as the report (if exists)
+    capture set scheme ecb2015
+
+    di "the following shortcuts has been created:" + char(13) + char(10)
+    sreturn list
+
+end
+
+
+* NB: use only absolute pathnames, and use slashes
+setenv, data("C:/Users/pizzigo/Documents/hfcs") dir("P:/ECB business areas/DGR/Databases and Programme files/DGR/Alessandro Pizzigolotto/try") fmt("pdf")
