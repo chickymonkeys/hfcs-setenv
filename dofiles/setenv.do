@@ -26,7 +26,7 @@ set more off
 set matsize 11000, permanently
 
 * check also for updates
-ssc updates
+
 * ssc install git
 * set web-gw.ecb.de as proxy server in stata, port 8080
 * substitute username and password with the internal credentials
