@@ -7,21 +7,27 @@
 ********************************************************************************
 
 * NB: use only absolute pathnames
-
+* cap prog drop setenv
 *! setenv v1.0.1 APizzigolotto 11sep2017
 program define setenv, sclass
-    version 1.0.1
+    * version 1.0.1
     * set env datapath workspace graphformat, wave(1 OR 2 OR both)
-    syntax anything (min=2 max=3 strL)
-    * tokenize the pathname introduced
-    tokenize `anything'
+    * capture syntax, data(string) work(string) [fmt(string)]
+    * capture syntax anything(min=2 max=3 strL)
+    syntax, data(string) workspace(string) [gfmt(string)]
 
-    * divide in proper local macros the string
-    * and clear s() macros
+    if _rc {
+        di as err "there's an error in the syntax or the pathnames"
+        exit 198
+    }
+
+    * clear smacros
     sreturn clear
-    sreturn local data        = "`1'"
-    sreturn local workspace   = "`2'"
-    sreturn local graphFormat = "`3'"
+    * save in smacros the main paths
+    sreturn local survey      = "`data'"
+    sreturn local workspace   = "`workspace'"
+    sreturn local graphFormat = "`fmt'"
+
 
     * standard project scheme in the documentation
     local subdir    = "data programs references text"
@@ -31,64 +37,68 @@ program define setenv, sclass
     * no matter the database version, then we save the value pathname of the
     * folder of the two waves (if there is the distinction between the two waves,
     * otherwise I set only the datapath)
-    capture confirm file "`data'"
+    capture confirm file "`s(survey)'/nul"
     if _rc {
         di "error: there's no data folder at the indicated path. end."
         exit
     }
 
-    cd "`data'"
-    di "... datasets are situated in `data' (pathname saved in data)"
+    qui cd "`s(survey)'"
+    di "... datasets are situated in `s(survey)' (pathname saved in survey)"
     forvalues i = 1/2 {
-        capture confirm file "`data'/wave`i'"
+        capture confirm file "`s(survey)'/wave`i'/nul"
         if !_rc {
-            sreturn local wave`i' = "`data'/wave`i'"
-            di "... wave `i' is situated in `data'/wave`i' (pathname saved in wave`i')."
+            sreturn local wave`i' = "`s(survey)'/wave`i'"
+            di "... wave `i' is situated in `s(survey)'/wave`i' (pathname saved in wave`i')"
         }
     }
 
+    di char(13) char(10)
+
     * build the workspace (if does not exist)
-    capture confirm file "`workspace'"
+    capture confirm file "`s(workspace)'/nul"
     if _rc {
-        mkdir "`workspace'"
+        mkdir "`s(workspace)'"
         scalar flag = 1
         * to generate a line break, it is a good practice to use carriage return
         * char(13) and line feed char(10) together
-        di "... workspace folder does not exist at the indicated path... new folder created." + char(13) + char(10)
+        di "... workspace folder does not exist at the indicated path... new folder created." char(13) char(10)
     }
 
-    cd "`workspace'"
+    qui cd "`s(workspace)'"
     foreach d in `subdir' {
 
-        capture confirm file "`workspace'/`d'/nul"
+        capture confirm file "`s(workspace)'/`d'/nul"
 
         if _rc {
 
-            mkdir "`workspace'/`d'/"
+            mkdir "`s(workspace)'/`d'"
             di "... subfolder `d' added to the workspace."
 
             if "`d'" == "data" {
                 foreach dd in `subsubdir' {
-                    mkdir "`workspace'/`d'/`dd'"
+                    mkdir "`s(workspace)'/`d'/`dd'"
                     di "... subfolder `d'/`dd' added to the workspace."
                 }
             }
 
         }
 
-        sreturn local `d' = "`workspace'/`d'/"
+        if "`d'" == "data" {
+            foreach dd in `subsubdir' {
+                capture confirm file "`s(workspace)'/`d'/`dd'/nul"
 
-        foreach dd in `subsubdir' {
-            capture confirm file "`workspace'/`d'/`dd'/nul"
+                if _rc {
+                    mkdir "`s(workspace)'/`d'/`dd'"
+                    di "... subfolder `d'/`dd' added to the workspace."
+                }
 
-            if _rc {
-                mkdir "`workspace'/`d'/`dd'"
-                di "... subfolder `d'/`dd' added to the workspace."
+                sreturn local `dd' = "`s(workspace)'/`d'/`dd'"
+
             }
-
-            sreturn local `dd' = "`workspace'/`d'/`dd'"
-
         }
+
+        sreturn local `d' = "`s(workspace)'/`d'"
 
     }
 
@@ -98,7 +108,7 @@ program define setenv, sclass
     * set default scheme for the graphs as the report (if exists)
     capture set scheme ecb2015
 
-    di "the following shortcuts has been created:" + char(13) + char(10)
+    di "the following shortcuts has been created:"
     sreturn list
 
 end
