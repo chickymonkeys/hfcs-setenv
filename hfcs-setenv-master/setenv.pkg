@@ -1,0 +1,7 @@
+d 'SETENV': set the standard environment in order to work at every HFCS
+d dataset, with standard pathnames save in the sclass to refer at your project
+d directories in a simple way.
+d
+d Distribution-Date: 20170915
+d
+F setenv.ado

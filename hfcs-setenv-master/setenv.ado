@@ -103,7 +103,7 @@ program define setenv, sclass
     * set env datapath workspace graphformat, wave(1 OR 2 OR both)
     * capture syntax, data(string) work(string) [fmt(string)]
     * capture syntax anything(min=2 max=3 strL)
-    capture syntax, data(string) workspace(string) [gfmt(string)]
+    syntax, data(string) workspace(string) [gfmt(string)]
 
     if _rc {
         di as err "there's an error in the syntax or the pathnames"
@@ -115,8 +115,7 @@ program define setenv, sclass
     * save in smacros the main paths
     sreturn local survey      = "`data'"
     sreturn local workspace   = "`workspace'"
-    * TODO check if gfmt exists
-    sreturn local graphFormat = "`gfmt'"
+    sreturn local graphFormat = "`fmt'"
 
 
     * standard project scheme in the documentation
