@@ -13,24 +13,24 @@ global PROJECTNAME "Household Heterogeneity and the Transmission of Monetary Pol
 
 * save the project root pathname
 * Miguel Household Fragility ESRB Note
-* global PROJECTS "$WORKSPACE\Household-Fragility"
+global PROJECTS "$WORKSPACE/hhfragility-esrb"
 * Jirka Discussion Paper on the Transmission of Monetary Policy
-* global PROJECTS "$WORKSPACE\Distributional-Effect-MP"
+* global PROJECTS "$WORKSPACE/Distributional-Effect-MP"
 * -> in Jirka's Workspace Folder
 * global PROJECTS "$WORKSPACE"
 * Oreste Tasks
-global PROJECTS "$WORKSPACE\Oreste"
+* global PROJECTS "$WORKSPACE/Oreste"
 
 * we work on our workspace in the virtual hard drive
 * standard configuration of the project folder
-global DOCS      "$PROJECTS\docs"
-global TABLES    "$PROJECTS\output\tables"
-global GRAPHS    "$PROJECTS\output\graphs"
-global DOFILES   "$PROJECTS\dofiles"
+global DOCS      "$PROJECTS/docs"
+global TABLES    "$PROJECTS/output/tables"
+global GRAPHS    "$PROJECTS/output/graphs"
+global DOFILES   "$PROJECTS/dofiles"
 
 * Jirka's Discussion Paper Project
-* global DOCS        "$PROJECTS\references"
-* global TABLES      "$PROJECTS\data\tables"
-* global GRAPHS      "$PROJECTS\data\graphs"
-* global DOFILES     "$PROJECTS\programs"
+* global DOCS        "$PROJECTS/references"
+* global TABLES      "$PROJECTS/data/tables"
+* global GRAPHS      "$PROJECTS/data/graphs"
+* global DOFILES     "$PROJECTS/programs"
 

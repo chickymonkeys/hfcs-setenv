@@ -1,13 +1,102 @@
-********************************************************************************
-* Version: 1.0.0                                                               *
-* Title: setenv                                                                *
-* Author: Alessandro Pizzigolotto (gitlab: @dubidub)                           *
-* Description: set the environment to work at your HFCS dataset, with standard *
-* global variables to be used in your programmes                               *
-********************************************************************************
+/*** DO NOT EDIT THIS LINE -----------------------------------------------------
+Version: 1.0.1
+Title: setenv
+Author: Alessandro Pizzigolotto (github: @chickymonkeys)
+Desription: set the standard environment in order to work at every HFCS
+dataset, with standard pathnames save in the sclass to refer at your project
+directories in a simple way.
+[GitHub](http://www.github.com/chickymonkeys/hfcs-setenv) website
+(c) European Central Bank
+----------------------------------------------------- DO NOT EDIT THIS LINE ***/
 
-* NB: use only absolute pathnames
+/***
+Syntax:
+======
+
+{p}
+{cmd: setenv} {it:data{(help strings:string)}} {it:workspace({help strings:string)}} [ {it:gfmt({help strings:string)}} ]
+{p_end}
+
+The __setenv__ command takes three arguments at maximum, two are compulsory and
+the third is optional:
+
+{marker arguments}{...}
+{synoptset 20 tabbed}{...}
+{synopthdr:arguments}
+{synoptline}
+{synopt:{opt data(_pathname_)}} the absolute `PATHNAME` where the root folder
+of the dataset is located as a string __`PATHNAME`__ {p_end}
+{synopt:{opt workspace(_pathaname_)}} the absolute `PATHNAME` where you want to
+set your workspace as a string __`PATHNAME`__ (created if does not exists) {p_end}
+{synopt:{opt gfmt(_graphFormat_)}} the file format for your exported graphs
+during the analysis {p_end}
+{synoptline}
+{p2colreset}{...}
+
+N.B. Remember to ALWAYS use only absolute pathnames when you specify the
+location of the directories, otherwise it does not work. This has been set like
+that to save the full pathnames in the s() class.
+
+Description
+===========
+
+__setenv__ simplifies the analysis on the HFCS dataset by setting a standard
+environement in which you can perform your analysis. It allows to create the
+directory tree at the specified __PATHNAME__ when the command is run:
+
+./workspace
+./workspace/data
+./workspace/data/graphs
+./workspace/data/tables
+./workspace/references
+./workspace/programs
+./workspace/text
+
+It also saves the absolute __PATHNAME__ of those folders in the {cmd:s()} class,
+as also the __PATHNAME__ of the dataset's root directory. The __PATHNAME__ of
+the single waves is also saved in {cmd:s(wave2)} and {cmd:s(wave2)} whether
+the datasets are inside the folders __wave1__ and __wave2__ in the specified
+dataset root directory.
+
+Stored Results
+==============
+
+{marker results}{...}
+
+{cmd:setenv} stores the following in {cmd:s()}:
+{synoptset 20 tabbed}{...}
+{p2col 5 20 24 2: Macros}{p_end}
+{synopt:{cmd:e(survey)}}absolute PATHNAME of the HFCS datasets' root folder{p_end}
+{synopt:{cmd:e(wave1)}}absolute PATHNAME of the HFCS first wave dataset's root folder{p_end}
+{synopt:{cmd:e(wave2)}}absolute PATHNAME of the HFCS second wave dataset's root folder{p_end}
+{synopt:{cmd:e(workspace)}}absolute PATHNAME of the workspace's root folder{p_end}
+{synopt:{cmd:e(data)}}absolute PATHNAME of the workspace output's subfolder{p_end}
+{synopt:{cmd:e(graphs)}}absolute PATHNAME of the workspace output graphs' subfolder{p_end}
+{synopt:{cmd:e(tables)}}absolute PATHNAME of the workspace output tables' subfolder{p_end}
+{synopt:{cmd:e(programs)}}absolute PATHNAME of the workspace dofiles' subfolder{p_end}
+{synopt:{cmd:e(references)}}absolute PATHNAME of the workspace documentation's subfolder{p_end}
+{synopt:{cmd:e(text)}}absolute PATHNAME of the workspace subfolder for comments and working papers{p_end}
+{synopt:{cmd:e(graphFormat)}}preferred graph format's extension{p_end}
+{p2colreset}{...}
+
+Author
+======
+
+Alessandro Pizzigolotto
+European Central Bank
+
+- - -
+
+This help file was dynamically produced by
+[MarkDoc Literate Programming package](http://www.haghish.com/markdoc/)
+
+***/
+
 * cap prog drop setenv
+* to launch markdoc, use db markdoc which launches its GUI
+* or markdoc "path.ado" , export(sthlp) helplayout replace install build date noisily
+* before running it change cd to the directory of the ado file
+
 *! setenv v1.0.1 APizzigolotto 11sep2017
 program define setenv, sclass
     * version 1.0.1
