@@ -26,6 +26,7 @@ set more off
 set matsize 11000, permanently
 
 * check also for updates
+ssc updates
 * ssc install git
 * set web-gw.ecb.de as proxy server in stata, port 8080
 * substitute username and password with the internal credentials
@@ -34,17 +35,15 @@ set matsize 11000, permanently
 * don't be scared, he's a nice guy afraid of research replicability
 * https://www.stata.com/meeting/switzerland16/slides/haghish-switzerland16.pdf
 net install github, from("https://haghish.github.io/github/")
+* remember to set .gitignore in the directories with git set
 
-* remember to set .gitignore_global in the home directory
-* check also for updates of your own programs
-* git install
-* net install datahand, from(https://gitlab.com/dubidub/HFCSdatahand.git)
+* install wordwrap, tool to split strings (for the graphs)
+github install mloeffler/wordwrap, force
 
-* net from https://mloeffler.github.io/stata/, fo
-* net install wordwrap
-* github install mloeffler/wordwrap, force
-* github install chickymonkeys/hfcs-setenv
-* github install chickymonkeys/hfcs-datahand
+* install my setenv command to create the environment
+github install chickymonkeys/hfcs-setenv
+* install my datahand package with a lot of good stuff
+github install chickymonkeys/hfcs-datahand
 
 * NB: use only absolute pathnames, and use slashes
 * setenv, data("C:/Users/pizzigo/Documents/hfcs") workspace("P:/ECB business areas/DGR/Databases and Programme files/DGR/Alessandro Pizzigolotto/newproject") gfmt("pdf") or gfmt("emf")
