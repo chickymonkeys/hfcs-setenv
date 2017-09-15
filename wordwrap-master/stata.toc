@@ -1,3 +1,0 @@
-d 'WORDWRAP'
-p wordwrap
-p wordwrap

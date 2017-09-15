@@ -41,7 +41,7 @@ net install github, from("https://haghish.github.io/github/")
 github install mloeffler/wordwrap, force
 
 * install my setenv command to create the environment
-github install chickymonkeys/hfcs-setenv
+github install chickymonkeys/hfcs-setenv, force
 * install my datahand package with a lot of good stuff
 github install chickymonkeys/hfcs-datahand
 
