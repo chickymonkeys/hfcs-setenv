@@ -7,19 +7,19 @@ at your project directories in a simple way.
 Syntax
 ======
 
-__`setenv`__ _data_(string) _workspace_(string) \[ _gfmt_(string) \]
+__`setenv`__, _data_( _string_ ) _workspace_( _string_ ) \[ _gfmt_( _string_ ) \]
 
 The **setenv** command takes three arguments at maximum, two are compulsory and
 the third is optional:
 
-    arguments               Description
+    arguments          Description
     ---------------------------------------------------------------------------
-    data(_pathname_)        the absolute `PATHNAME` where the root folder of
-                            the dataset is located as a string __`PATHNAME`__
-    workspace(_pathaname_)  the absolute `PATHNAME` where you want to set your
-                            workspace as a string __`PATHNAME`__ (created if
+    data(string)       the absolute PATHNAME where the root folder of
+                            the dataset is located as a string PATHNAME
+    workspace(string)  the absolute PATHNAME where you want to set your
+                            workspace as a string PATHNAME (created if
                             does not exists)
-    gfmt(_graphFormat_)     the file format for your exported graphs during the
+    gfmt(string)       the file format for your exported graphs during the
                             analysis
     ---------------------------------------------------------------------------
 
@@ -35,9 +35,13 @@ standard environement in which you can perform your analysis. It allows
 to create the directory tree at the specified **PATHNAME** when the
 command is run:
 
-./workspace ./workspace/data ./workspace/data/graphs
-./workspace/data/tables ./workspace/references ./workspace/programs
-./workspace/text
+`~/workspace`
+`~/workspace/data`
+`~/workspace/data/graphs`
+`~/workspace/data/tables`
+`~/workspace/references`
+`~/workspace/programs`
+`~/workspace/text`
 
 It also saves the absolute **PATHNAME** of those folders in the s()
 class, as also the **PATHNAME** of the dataset's root directory. The
@@ -48,18 +52,21 @@ the specified dataset root directory.
 Stored Results
 ==============
 
-setenv stores the following in s(): Macros\
-e(survey) absolute PATHNAME of the HFCS datasets' root folder e(wave1)
-absolute PATHNAME of the HFCS first wave dataset's root folder e(wave2)
-absolute PATHNAME of the HFCS second wave dataset's root folder
-e(workspace) absolute PATHNAME of the workspace's root folder e(data)
-absolute PATHNAME of the workspace output's subfolder e(graphs) absolute
-PATHNAME of the workspace output graphs' subfolder e(tables) absolute
-PATHNAME of the workspace output tables' subfolder e(programs) absolute
-PATHNAME of the workspace dofiles' subfolder e(references) absolute
-PATHNAME of the workspace documentation's subfolder e(text) absolute
-PATHNAME of the workspace subfolder for comments and working papers
-e(graphFormat) preferred graph format's extension
+setenv stores the following in `s()` and global macros:
+
+__Macros__ and __Global Macros__:
+
+__`e(survey)`__, __`$SURVEY`__           absolute __PATHNAME__ of the HFCS datasets' root folder
+__`e(wave1)`__, __`$WAVE1`__             absolute __PATHNAME__ of the HFCS first wave dataset's root folder
+__`e(wave2)`__, __`$WAVE2`__             absolute __PATHNAME__ of the HFCS second wave dataset's root folder
+__`e(workspace)`__, __`$WORKSPACE`__     absolute __PATHNAME__ of the workspace's root folder
+__`e(data)`__, __`$DATA`__               absolute __PATHNAME__ of the workspace output's subfolder
+__`e(graphs)`__, __`$GRAPHS`__           absolute __PATHNAME__ of the workspace output graphs' subfolder
+__`e(tables)`__, __`$TABLES`__           absolute __PATHNAME__ of the workspace output tables' subfolder
+__`e(programs)`__, __`$PROGRAMS`__       absolute __PATHNAME__ of the workspace dofiles' subfolder
+__`e(references)`__, __`$REFERENCES`__   absolute __PATHNAME__ of the workspace documentation's subfolder
+__`e(text)`__, __`$TEXT`__               absolute __PATHNAME__ of the workspace subfolder for comments and working papers
+__`e(graphFormat)`__, __`$GRAPHFORMAT`__ preferred graph format's extension
 
 Author
 ======
