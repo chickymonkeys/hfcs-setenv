@@ -1,5 +1,8 @@
 v 1.0.1
-d 'SETENV': set the standard environment in order to work at every HFCS
-d dataset, with standard pathnames save in the sclass to refer at your project
-d directories in a simple way.
+d 'SETENV': set the standard environment in order to work at every HFCS dataset,
+d with standard pathnames save in the sclass and global macros to refer at your
+d project directories in a simple way.
+d
+d [GitHub](http://www.github.com/chickymonkeys/hfcs-setenv) website
+d (c) European Central Bank
 p setenv

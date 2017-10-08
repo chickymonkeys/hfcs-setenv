@@ -2,61 +2,69 @@
 Version: 1.0.1
 Title: setenv
 Author: Alessandro Pizzigolotto (github: @chickymonkeys)
-Desription: set the standard environment in order to work at every HFCS
-dataset, with standard pathnames save in the sclass to refer at your project
-directories in a simple way.
+Description: set the standard environment in order to work at every HFCS dataset,
+with standard pathnames save in the sclass and global macros to refer at your
+project directories in a simple way.
+
 [GitHub](http://www.github.com/chickymonkeys/hfcs-setenv) website
 (c) European Central Bank
 ----------------------------------------------------- DO NOT EDIT THIS LINE ***/
 
 /***
+
 Syntax:
 ======
 
-{p}
-{cmd: setenv} {it:data{(help strings:string)}} {it:workspace({help strings:string)}} [ {it:gfmt({help strings:string)}} ]
+{p 8 13 2}
+{cmd:setenv}, {it:data}(help strings) {it:workspace}(help strings) [ {it:gfmt}(help strings) ]
+
+{phang}
+The __setenv__ command takes three arguments at maximum, where two are compulsory
+and the third is optional:
+
+{synoptset 20 tabbed}{...}
+
+{synoptline}
+
+{synopt:{opt data(help string)}}specify the __PATHNAME__ of the dataset root
+folder in absolute terms with a string. {p_end}
+
+{synopt:{opt workspace(help string)}}specify the __PATHNAME__ of the workspace
+root folder in absolute terms (created if it does not exists). {p_end} 
+
+{synopt:{opt gfmt(help string)}}specify the file format for your exported graphs
+during the analysis. {p_end}
+
+{phang}N. B. : Remember to ALWAYS use only absolute pathnames when you specify
+the location of the directories, otherwise there could be issues in referring to
+the folders. This has be set to save the full pathnames in the `s()` class and
+the global macros. {p_end}
+
+Folder Tree Description:
+=======================
+
+{phang}
+__setenv__ simplifies the beginning of the analysis on the HFCS dataset by setting
+a standard environment in which performing it, for a working paper or whatever else.
+It allows to create the directory tree at the specified __PATHNAME__ when the
+command is run:{p_end}
+
+{phang}{c 29}
+    {cmd: ~ /workspace}
+    {cmd: ~ /workspace/data}
+    {cmd: ~ /workspace/data/graphs}
+    {cmd: ~ /workspace/data/tables}
+    {cmd: ~ /workspace/references}
+    {cmd: ~ /workspace/programs}
+    {cmd: ~ /workspace/text}
 {p_end}
 
-The __setenv__ command takes three arguments at maximum, two are compulsory and
-the third is optional:
-
-{marker arguments}{...}
-{synoptset 20 tabbed}{...}
-{synopthdr:arguments}
-{synoptline}
-{synopt:{opt data(_pathname_)}} the absolute `PATHNAME` where the root folder
-of the dataset is located as a string __`PATHNAME`__ {p_end}
-{synopt:{opt workspace(_pathaname_)}} the absolute `PATHNAME` where you want to
-set your workspace as a string __`PATHNAME`__ (created if does not exists) {p_end}
-{synopt:{opt gfmt(_graphFormat_)}} the file format for your exported graphs
-during the analysis {p_end}
-{synoptline}
-{p2colreset}{...}
-
-N.B. Remember to ALWAYS use only absolute pathnames when you specify the
-location of the directories, otherwise it does not work. This has been set like
-that to save the full pathnames in the s() class.
-
-Description
-===========
-
-__setenv__ simplifies the analysis on the HFCS dataset by setting a standard
-environement in which you can perform your analysis. It allows to create the
-directory tree at the specified __PATHNAME__ when the command is run:
-
-./workspace
-./workspace/data
-./workspace/data/graphs
-./workspace/data/tables
-./workspace/references
-./workspace/programs
-./workspace/text
-
+{phang}
 It also saves the absolute __PATHNAME__ of those folders in the {cmd:s()} class,
 as also the __PATHNAME__ of the dataset's root directory. The __PATHNAME__ of
 the single waves is also saved in {cmd:s(wave2)} and {cmd:s(wave2)} whether
 the datasets are inside the folders __wave1__ and __wave2__ in the specified
-dataset root directory.
+dataset root directory.{p_end}
 
 Stored Results
 ==============
@@ -83,7 +91,8 @@ Author
 ======
 
 Alessandro Pizzigolotto
-European Central Bank
+[GitHub](http://www.github.com/chickymonkeys/hfcs-setenv) website
+(c) European Central Bank
 
 - - -
 
@@ -112,12 +121,17 @@ program define setenv, sclass
 
     * clear smacros
     sreturn clear
-    * save in smacros the main paths
+
+    * save in smacros and global macros the main pathnames
+    * survey dataset root directory pathname
     sreturn local survey      = "`data'"
+    global SURVEY             = "`data'"
+    * workspace root directory pathname
     sreturn local workspace   = "`workspace'"
+    global WORKSPACE          = "`workspace'"
     * TODO check if gfmt exists
     sreturn local graphFormat = "`gfmt'"
-
+    global GRAPHFORMAT        = "`gfmt'"
 
     * standard project scheme in the documentation
     local subdir    = "data programs references text"
@@ -139,6 +153,7 @@ program define setenv, sclass
         capture confirm file "`s(survey)'/wave`i'/nul"
         if !_rc {
             sreturn local wave`i' = "`s(survey)'/wave`i'"
+            global WAVE`i'        = "`s(survey)'/wave`i'"
             di "... wave `i' is situated in `s(survey)'/wave`i' (pathname saved in wave`i')"
         }
     }
@@ -184,11 +199,17 @@ program define setenv, sclass
                 }
 
                 sreturn local `dd' = "`s(workspace)'/`d'/`dd'"
+                * create the global macro related to the directory upper-case
+                local          up  = strupper("`dd'")
+                global        `up' = "`s(workspace)'/`d'/`dd'"
 
             }
         }
 
         sreturn local `d' = "`s(workspace)'/`d'"
+        * create the global macro related to the directory upper-case
+        local         up  = strupper("`d'")
+        global       `up' = "`s(workspace)'/`d'"
 
     }
 
