@@ -30,7 +30,7 @@ and the third is optional:
 folder in absolute terms with a string. {p_end}
 
 {synopt:{opt workspace(help string)}}specify the __PATHNAME__ of the workspace
-root folder in absolute terms (created if it does not exists). {p_end} 
+root folder in absolute terms (created if it does not exists). {p_end}
 
 {synopt:{opt gfmt(help string)}}specify the file format for your exported graphs
 during the analysis. {p_end}
@@ -125,10 +125,10 @@ program define setenv, sclass
     * save in smacros and global macros the main pathnames
     * survey dataset root directory pathname
     sreturn local survey      = "`data'"
-    global SURVEY             = "`data'"
+    global HFCSDATA           = "`data'"
     * workspace root directory pathname
     sreturn local workspace   = "`workspace'"
-    global WORKSPACE          = "`workspace'"
+    global ROOT               = "`workspace'"
     * TODO check if gfmt exists
     sreturn local graphFormat = "`gfmt'"
     global GRAPHFORMAT        = "`gfmt'"
